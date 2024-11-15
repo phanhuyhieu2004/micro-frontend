@@ -1,18 +1,21 @@
+.comment-chat{
+  width: 500px;
+  max-width: calc(100% - 10px);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+  background: red;
+ }
 .comment-session{
   width: 1170px;
   height: auto;
   margin: 50px auto;
   max-width: calc(100% - 20px);
 }
-.q-btn{
-  background: transparent;
-}
-.q-btn.q-btn-item.non-selectable.no-outline.q-btn--standard.q-btn--rectangle.q-btn--actionable.q-focusable.q-hoverable :hover{
-  background: none !important;
-}
-.q-btn:hover{
-  background: transparent !important;
-}
+
+
+
 .q-avatar {
 margin: 0 10px;
 }
@@ -38,6 +41,18 @@ margin: 0 10px;
 }
 .fa-solid.fa-gear{
   color: black;
+}
+.q-pa-md.row.justify-center{
+  position: relative;
+}
+
+.q-btn{
+  height: fit-content;
+  border-radius: 50%;
+  width: 35px;
+}
+.q-field{
+  padding: 10px;
 }
 .dropdown-menu {
   position: absolute;

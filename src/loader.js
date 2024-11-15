@@ -1,3 +1,3 @@
-import CommentComponent from "components/CommentComponent.vue";
+import WatchComponent from "components/WatchComponent.vue";
 
-export default CommentComponent;
+export default WatchComponent;

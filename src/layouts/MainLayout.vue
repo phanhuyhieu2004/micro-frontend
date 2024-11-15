@@ -1,8 +1,9 @@
 <template>
-<CommentComponent></CommentComponent>
+  <CommentComponent></CommentComponent>
 </template>
 
 <script setup>
+
 
 import CommentComponent from "components/CommentComponent.vue";
 

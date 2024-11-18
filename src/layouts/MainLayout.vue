@@ -1,117 +1,112 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+  <div>
+    <q-btn @click="toggleCustomizeMode" style="background: rgba(255, 255, 255, 0.33);">
+      <i :class="customizeMode ? 'fas fa-save fa-beat' : 'fas fa-cog fa-beat'"></i>
+    </q-btn>
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+    <GridLayout
+      v-model:layout="layout"
+      :row-height="30"
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+    :is-draggable="customizeMode"
+    :is-resizable="customizeMode"
+    responsive
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+    <template #item="{ item }">
+      <div :class="['component-container', `component-${item.i}`]">
+        <component :is="getComponent(item.i)" />
+      </div>
+    </template>
+    </GridLayout>
+  </div>
 </template>
 
+
+
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { GridLayout } from 'grid-layout-plus';
+import { defineAsyncComponent } from 'vue';
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
-
-export default defineComponent({
-  name: 'MainLayout',
-
+export default {
+  name: 'GridLayoutComponent',
   components: {
-    EssentialLink
+    GridLayout,
   },
-
-  data () {
+  data() {
     return {
-      linksList,
-      leftDrawerOpen: false
-    }
+      layout: this.loadLayout(),
+      customizeMode: false,
+      modules: {
+        0: defineAsyncComponent(() => import('commentApp/VueAppLoader')),
+        1: defineAsyncComponent(() => import('commentApp/VueAppLoader1')),
+        2: defineAsyncComponent(() => import('commentApp/VueAppLoader2')),
+        3: defineAsyncComponent(() => import('commentApp/VueAppLoader3')),
+        4: defineAsyncComponent(() => import('commentApp/VueAppLoader4')),
+        5: defineAsyncComponent(() => import('commentApp/VueAppLoader5')),
+        6: defineAsyncComponent(() => import('commentApp/VueAppLoader6')),
+      },
+    };
   },
-
   methods: {
-    toggleLeftDrawer () {
-      this.leftDrawerOpen = !this.leftDrawerOpen
-    }
-  }
-})
+    toggleCustomizeMode() {
+      if (this.customizeMode) {
+        this.saveLayout();
+      }
+      this.customizeMode = !this.customizeMode;
+    },
+    getComponent(i) {
+      return this.modules[i];
+    },
+    saveLayout() {
+      localStorage.setItem('grid-layout', JSON.stringify(this.layout));
+      console.log('Layout saved:', this.layout);
+    },
+    loadLayout() {
+      const savedLayout = localStorage.getItem('grid-layout');
+      try {
+        return savedLayout ? JSON.parse(savedLayout) : this.defaultLayout();
+      } catch (e) {
+        console.error('Error loading layout:', e);
+        return this.defaultLayout();
+      }
+    },
+    defaultLayout() {
+      return [
+        { x: 0, y: 0, w: 2, h: 5, i: '0', static: false },
+        { x: 2, y: 0, w: 2, h: 5, i: '1', static: false },
+        { x: 4, y: 0, w: 2, h: 5, i: '2', static: false },
+        { x: 6, y: 0, w: 2, h: 5, i: '3', static: false },
+        { x: 8, y: 0, w: 2, h: 5, i: '4', static: false },
+        { x: 0, y: 5, w: 2, h: 5, i: '5', static: false },
+        { x: 2, y: 5, w: 2, h: 5, i: '6', static: false },
+      ];
+    },
+  },
+  watch: {
+    layout: {
+      handler(newLayout) {
+        if (this.customizeMode) {
+          this.saveLayout();
+        }
+      },
+      deep: true,
+    },
+  },
+};
 </script>
+
+
+<style>
+body {
+  background-image: url("https://github.com/phanhuyhieu2004/Lover/blob/update19/3/src/main/webapp/image.gif?raw=true");
+  background-size: cover;
+}
+
+
+
+.component-container {
+  margin: 50px auto;
+}
+</style>
+
